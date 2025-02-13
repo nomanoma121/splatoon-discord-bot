@@ -4,10 +4,12 @@ import dotenv from "dotenv";
 import { ping } from "./commands/ping";
 import { hello } from "./commands/hello";
 import { talk } from "./commands/talk";
+import { embed } from "./commands/embed";
+import { fetchApi } from "./commands/fetch-api";
 
 dotenv.config();
 
-const commands = [ping, hello, talk].map((command) => command.data.toJSON());
+const commands = [embed, ping, hello, talk, fetchApi].map((command) => command.data.toJSON());
 
 const rest = new REST({ version: "10" }).setToken(process.env.TOKEN as string);
 
