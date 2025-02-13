@@ -1,6 +1,6 @@
 export const fetchData = async () => {
   try {
-    const response = await fetch("https://spla3.yuu26.com/api/bankara-open/schedule", {
+    const response = await fetch("https://spla3.yuu26.com/api/bankara-open/next", {
       method: "GET",
       headers: {
         "User-Agent": "takeuchi180121@gmail.com",
