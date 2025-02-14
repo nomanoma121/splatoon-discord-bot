@@ -17,7 +17,6 @@ const rest = new REST({ version: "10" }).setToken(process.env.TOKEN as string);
   try {
     console.log("Refreshing guild commands...");
 
-    // ギルドIDを指定 (ここを変更)
     await rest.put(
       Routes.applicationGuildCommands(process.env.CLIENT_ID as string, process.env.GUILD_ID as string),
       { body: commands }
