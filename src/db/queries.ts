@@ -15,13 +15,18 @@ const getAll = async (table: SQLiteTable) => {
   return await db.select().from(table);
 }
 
-const create = async (table: SQLiteTable, values) => {
+const create = async (table: SQLiteTable, values: any) => {
   return await db.insert(table).values(values);
+}
+
+const delteAll = async (table: SQLiteTable) => {
+  return await db.delete(table);
 }
 
 export const Schedules = {
   getAll: () => getAll(schedules),
-  create: (values: Schedule) => create(schedules, values),
+  create: (data: Schedule) => create(schedules, data),
+  deleteAll: () => delteAll(schedules),
 }
 
 export const Stages = {
@@ -39,9 +44,3 @@ export const MatchTypes = {
   create: (data: {key: string, name: string}) => create(matchTypes, data),
 }
 
-export const deleteAll = async () => {
-  await db.delete(schedules);
-  await db.delete(stages);
-  await db.delete(rules);
-  await db.delete(matchTypes);
-}
