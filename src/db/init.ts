@@ -15,7 +15,8 @@ export const initializeDB = async () => {
   });
 
   migrate(db, { migrationsFolder: "./src/db/migrations" });
-
+  
+ try {
   if ((await Stages.getAll()).length === 0) {
     seeds.stages.forEach((stage) => {
       Stages.create(stage);
@@ -23,7 +24,7 @@ export const initializeDB = async () => {
   }
 
   if ((await Stages.getAll()).length !== seeds.stages.length) {
-    console.error("Stages not seeded correctly!");
+    throw new Error("Stages not seeded correctly!");
   }
 
   if ((await MatchTypes.getAll()).length === 0) {
@@ -33,7 +34,7 @@ export const initializeDB = async () => {
   }
 
   if ((await MatchTypes.getAll()).length !== seeds.matchTypes.length) {
-    console.error("Match Types not seeded correctly!");
+    throw new Error("MatchTypes not seeded correctly!");
   }
 
   if ((await Rules.getAll()).length === 0) {
@@ -43,8 +44,11 @@ export const initializeDB = async () => {
   }
 
   if ((await Rules.getAll()).length !== seeds.rules.length) {
-    console.error("Rules not seeded correctly!");
+    throw new Error("Rules not seeded correctly!");
   }
+} catch (err) {
+  console.error(err);
+}
 
   console.log("DB initialization complete!");
 };
