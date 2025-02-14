@@ -19,14 +19,14 @@ const create = async (table: SQLiteTable, values: any) => {
   return await db.insert(table).values(values);
 }
 
-const delteAll = async (table: SQLiteTable) => {
+const deleteAll = async (table: SQLiteTable) => {
   return await db.delete(table);
 }
 
 export const Schedules = {
   getAll: () => getAll(schedules),
   create: (data: Schedule) => create(schedules, data),
-  deleteAll: () => delteAll(schedules),
+  deleteAll: () => deleteAll(schedules),
 }
 
 export const Stages = {
