@@ -20,22 +20,31 @@ export const initializeDB = async () => {
     seeds.stages.forEach((stage) => {
       Stages.create(stage);
     });
-    console.log("Stages seeded");
+  }
+
+  if ((await Stages.getAll()).length !== seeds.stages.length) {
+    console.error("Stages not seeded correctly!");
   }
 
   if ((await MatchTypes.getAll()).length === 0) {
     seeds.matchTypes.forEach((matchType) => {
       MatchTypes.create(matchType);
     });
-    console.log("Match types seeded");
+  }
+
+  if ((await MatchTypes.getAll()).length !== seeds.matchTypes.length) {
+    console.error("Match Types not seeded correctly!");
   }
 
   if ((await Rules.getAll()).length === 0) {
     seeds.rules.forEach((rule) => {
       Rules.create(rule);
     });
-    console.log("Rules seeded");
   }
-  
+
+  if ((await Rules.getAll()).length !== seeds.rules.length) {
+    console.error("Rules not seeded correctly!");
+  }
+
   console.log("DB initialization complete!");
 };
