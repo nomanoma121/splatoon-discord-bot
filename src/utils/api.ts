@@ -1,22 +1,14 @@
+import axios from "axios";
+
 export const fetchData = async () => {
   try {
-    const response = await fetch("https://spla3.yuu26.com/api/bankara-open/next", {
-      method: "GET",
-      headers: {
-        "User-Agent": "takeuchi180121@gmail.com",
-        "Accept": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch data from the API.");
+    const response = await axios.get("https://spla3.yuu26.com/api/schedule");
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      throw new Error("Failed to fetch data");
     }
-
-    const data = await response.json();
-    console.log(data);
-    return data;
   } catch (error) {
     console.error(error);
-    return { error: "Failed to fetch data" };
   }
-}
+};

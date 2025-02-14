@@ -1,10 +1,12 @@
-import { Client, GatewayIntentBits} from "discord.js";
+import { Client, GatewayIntentBits } from "discord.js";
 import dotenv from "dotenv";
-import { registerCommands } from "./commands"; 
+import { registerCommands } from "./commands";
 import { registerEvents } from "./events"
-import { db } from "./db";
-import { schedules } from "./db/schema";
-import { migrate } from "drizzle-orm/better-sqlite3/migrator";
+import { Schedules } from "./db/queries";
+import { initializeDB } from "./db/init";
+import { fetchData } from "./utils/api";
+import { filterData } from "./utils/filterData";
+// import cron from "node-cron";
 
 dotenv.config();
 
@@ -16,16 +18,40 @@ const client = new Client({
   ],
 });
 
-const main = async () => {
-  const result = await db.select().from(schedules);
-  console.log(result);
-}
-
-migrate(db, { migrationsFolder: "./src/db/migrations" });
 registerCommands(client);
 registerEvents(client);
 
-main();
+const fetchAndInsert = async () => {
+  try {
+    const data = await fetchData();
+    const schedules = filterData(data);
+    schedules.forEach((schedule: any) => {
+      Schedules.create(schedule);
+    });
+  } catch (err) {
+    console.error(err);
+  }
+}
 
+initializeDB().then(() => {
+  console.log("DB initialized");
+  fetchAndInsert();
+});
+
+
+// 奇数時間に実行(UTC+9)
+// cron.schedule("3 1-23/2 * * *", async () => {
+//   console.log("fetching data...");
+//   try {
+//     Schedules.deleteAll();
+//     const data = await fetchData();
+//     const schedules = insertToDB(data);
+//     schedules.forEach((schedule) => {
+//       Schedules.create(schedule);
+//     });
+//   } catch (err) {
+//     console.error(err);
+//   }
+// });
 
 client.login(process.env.TOKEN);

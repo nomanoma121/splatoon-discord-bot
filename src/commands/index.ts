@@ -3,9 +3,9 @@ import { ping } from "./ping";
 import { hello } from "./hello";
 import { talk } from "./talk";
 import { embed } from "./embed";
-import { fetchApi } from "./fetch-api";
+// import { fetchApi } from "./fetch-api";
 
-const commands = [embed, hello, ping, talk, fetchApi];
+const commands = [embed, hello, ping, talk];
 
 export const registerCommands = (client: Client) => {
   client.on("interactionCreate", async (interaction) => {
