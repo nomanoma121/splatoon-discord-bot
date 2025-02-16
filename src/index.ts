@@ -1,25 +1,25 @@
-import { Client, GatewayIntentBits } from "discord.js";
-import dotenv from "dotenv";
-import { registerCommands } from "./commands";
-import { registerEvents } from "./events"
+// import { Client, GatewayIntentBits } from "discord.js";
+// import dotenv from "dotenv";
+// import { registerCommands } from "./commands";
+// import { registerEvents } from "./events"
 import { Schedules } from "./db/queries";
 import { initializeDB } from "./db/init";
 import { fetchData } from "./utils/api";
 import { filterData } from "./utils/filterData";
 // import cron from "node-cron";
 
-dotenv.config();
+// dotenv.config();
 
-const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent,
-  ],
-});
+// const client = new Client({
+//   intents: [
+//     GatewayIntentBits.Guilds,
+//     GatewayIntentBits.GuildMessages,
+//     GatewayIntentBits.MessageContent,
+//   ],
+// });
 
-registerCommands(client);
-registerEvents(client);
+// registerCommands(client);
+// registerEvents(client);
 
 const fetchAndInsert = async () => {
   try {
@@ -33,10 +33,10 @@ const fetchAndInsert = async () => {
   }
 }
 
-initializeDB().then(() => {
-  console.log("DB initialized");
-  fetchAndInsert();
-});
+(async () => {
+  await initializeDB();
+  await fetchAndInsert();
+})();
 
 
 // 奇数時間に実行(UTC+9)
@@ -54,4 +54,4 @@ initializeDB().then(() => {
 //   }
 // });
 
-client.login(process.env.TOKEN);
+// client.login(process.env.TOKEN);

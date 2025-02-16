@@ -7,7 +7,11 @@ type Schedule = {
   stage2ID: number;
 };
 
-const targetKeys = ["regular", "bankara_open", "bankara_challenge", "x"];
+type TargetKeys = 'regular' | 'bankara_open' | 'bankara_challenge' | 'x';
+
+type MatchData = {
+  
+}
 
 export const filterData = (data: any): Schedule[] => {
   console.log(data);
