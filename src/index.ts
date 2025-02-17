@@ -6,20 +6,20 @@ import { Schedules } from "./db/queries";
 import { initializeDB } from "./db/init";
 import { fetchData } from "./utils/api";
 import { filterData } from "./utils/filterData";
-// import cron from "node-cron";
+import cron from "node-cron";
 
-// dotenv.config();
+dotenv.config();
 
-// const client = new Client({
-//   intents: [
-//     GatewayIntentBits.Guilds,
-//     GatewayIntentBits.GuildMessages,
-//     GatewayIntentBits.MessageContent,
-//   ],
-// });
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+  ],
+});
 
-// registerCommands(client);
-// registerEvents(client);
+registerCommands(client);
+registerEvents(client);
 
 const fetchAndInsert = async () => {
   try {
@@ -39,19 +39,19 @@ const fetchAndInsert = async () => {
 })();
 
 
-// 奇数時間に実行(UTC+9)
-// cron.schedule("3 1-23/2 * * *", async () => {
-//   console.log("fetching data...");
-//   try {
-//     Schedules.deleteAll();
-//     const data = await fetchData();
-//     const schedules = insertToDB(data);
-//     schedules.forEach((schedule) => {
-//       Schedules.create(schedule);
-//     });
-//   } catch (err) {
-//     console.error(err);
-//   }
-// });
+奇数時間に実行(UTC+9)
+cron.schedule("3 1-23/2 * * *", async () => {
+  console.log("fetching data...");
+  try {
+    Schedules.deleteAll();
+    const data = await fetchData();
+    const schedules = insertToDB(data);
+    schedules.forEach((schedule) => {
+      Schedules.create(schedule);
+    });
+  } catch (err) {
+    console.error(err);
+  }
+});
 
-// client.login(process.env.TOKEN);
+client.login(process.env.TOKEN);
