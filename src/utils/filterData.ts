@@ -1,43 +1,40 @@
-type Schedule = {
-  startTime: string;
-  endTime: string;
-  matchTypeKey: string;
-  ruleKey: string;
-  stage1ID: number;
-  stage2ID: number;
+import { TMatchData, TSchedule } from "./types";
+
+type TFilterData = {
+  regular: TMatchData[];
+  bankara_open: TMatchData[];
+  bankara_challenge: TMatchData[];
+  x: TMatchData[];
 };
 
-type TargetKeys = 'regular' | 'bankara_open' | 'bankara_challenge' | 'x';
+const addProp = <T>(data: TMatchData, key: T): TTransformData => {
+  return { ...data, matchTypeKey: key as string };
+};
 
-type MatchData = {
-  
-}
+type TTransformData = TMatchData & { matchTypeKey: string };
 
-export const filterData = (data: any): Schedule[] => {
-  console.log(data);
-  try {
-    // data.result が存在するかをチェック
-    if (!data.result) {
-      throw new Error('data.result is undefined or null');
-    }
+const transformData = (data: TTransformData[]): TSchedule[] => {
+  return data.map((d) => {
+    return {
+      startTime: d.start_time,
+      endTime: d.end_time,
+      matchTypeKey: d.matchTypeKey,
+      ruleKey: d.rule.key,
+      stage1ID: d.stages[0].id,
+      stage2ID: d.stages[1].id,
+    };
+  });
+};
 
-    return Object.entries(data.result)  // data.result を処理
-      .filter(([key]) => targetKeys.includes(key))  // targetKeys に一致するプロパティをフィルタリング
-      .flatMap(([key, matches]) => {  
-        if (Array.isArray(matches)) {  // matches が配列であるか確認
-          return matches.map((match: any) => ({
-            startTime: match.startTime,
-            endTime: match.endTime,
-            matchTypeKey: match.matchTypeKey,
-            ruleKey: match.rule.key,
-            stage1ID: match.stages[0].id,
-            stage2ID: match.stages[1].id,
-          }));
-        }
-        return [];  // 配列でない場合は空配列を返す
-      });
-  } catch (err) {
-    console.error(err);
-    return [];
+export const filterData = (data: TFilterData): TSchedule[] => {
+  const objKeys = Object.keys(data) as (keyof TFilterData)[];
+  const filteredData: TSchedule[] = [];
+
+  for (const key of objKeys) {
+    const transformedData = data[key].map((d) => addProp(d, key));
+    const newData = transformData(transformedData); 
+    filteredData.push(...newData);
   }
+
+  return filteredData;
 };
