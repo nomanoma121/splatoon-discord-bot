@@ -1,15 +1,7 @@
 import { db } from "./index";
 import { schedules, stages, rules, matchTypes } from "./schema";
 import { SQLiteTable } from "drizzle-orm/sqlite-core";
-
-type Schedule = {
-  startTime: string;
-  endTime: string;
-  matchTypeKey: string;
-  ruleKey: string;
-  stage1ID: number;
-  stage2ID: number;
-};
+import { TSchedule } from "../utils/types";
 
 const getAll = async (table: SQLiteTable) => {
   return await db.select().from(table);
@@ -25,7 +17,7 @@ const deleteAll = async (table: SQLiteTable) => {
 
 export const Schedules = {
   getAll: () => getAll(schedules),
-  create: (data: Schedule) => create(schedules, data),
+  create: (data: TSchedule) => create(schedules, data),
   deleteAll: () => deleteAll(schedules),
 }
 
