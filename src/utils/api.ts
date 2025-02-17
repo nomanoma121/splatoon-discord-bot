@@ -1,8 +1,15 @@
 import axios from "axios";
+import { TFetchData } from "./types";
+import dotenv from "dotenv";
 
-export const fetchData = async () => {
+dotenv.config();
+
+export const fetchData = async (): Promise<TFetchData | null> => {
   try {
-    const response = await axios.get("https://spla3.yuu26.com/api/schedule");
+    if (!process.env.API_URL) {
+      throw new Error("API_URL is not defined");
+    }
+    const response = await axios.get(process.env.API_URL);
     if (response.status === 200) {
       return response.data;
     } else {
@@ -11,4 +18,5 @@ export const fetchData = async () => {
   } catch (error) {
     console.error(error);
   }
+  return null;
 };
