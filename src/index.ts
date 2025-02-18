@@ -8,7 +8,7 @@ import { fetchData } from "./utils/api";
 import { extractData } from "./utils/extractData";
 import { filterData } from "./utils/filterData";
 import { insertData } from "./utils/insertData";
-import cron from "cron";
+import { CronJob }from "cron";
 
 dotenv.config();
 
@@ -45,8 +45,10 @@ const updateSchedules = async () => {
     await updateSchedules();
 
     //奇数時間に実行(UTC+9)
-    const job = new cron.CronJob("3 1-23/2 * * *", async () => {
-      console.log("fetching data...");
+    const job = new CronJob("3 1-23/2 * * *", async () => {
+      const date = new Date();
+      console.log(`[${date.toLocaleString()}]`);
+      console.log("Updating schedules...");
       await updateSchedules();
     });
     job.start();
