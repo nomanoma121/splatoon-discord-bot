@@ -1,7 +1,7 @@
 import { Client, GatewayIntentBits } from "discord.js";
 import dotenv from "dotenv";
-import { registerCommands } from "./commands";
-import { registerEvents } from "./events";
+import { registerCommands } from "./bot/commands";
+import { registerEvents } from "./bot/events";
 import { Schedules } from "./db/queries";
 import { initializeDB } from "./db/init";
 import { fetchData } from "./utils/api";
@@ -45,10 +45,9 @@ const updateSchedules = async () => {
     await updateSchedules();
 
     //奇数時間に実行(UTC+9)
-    const job = new CronJob("3 1-23/2 * * *", async () => {
+    const job = new CronJob("10 1-23/2 * * *", async () => {
       const date = new Date();
-      console.log(`[${date.toLocaleString()}]`);
-      console.log("Updating schedules...");
+      console.log(`[${date.toLocaleString()}]`, "Updating schedules...");
       await updateSchedules();
     });
     job.start();
