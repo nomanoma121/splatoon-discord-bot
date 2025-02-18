@@ -13,7 +13,7 @@ export const search = {
     .setDescription("今後のスケジュールを検索します")
     .addStringOption((option) =>
       option
-        .setName("stage")
+        .setName("ステージ")
         .setDescription("ステージ名")
         .setRequired(false)
         .addChoices(
@@ -24,7 +24,7 @@ export const search = {
     )
     .addStringOption((option) =>
       option
-        .setName("rule")
+        .setName("ルール")
         .setDescription("ルール名")
         .setRequired(false)
         .addChoices(
@@ -35,7 +35,7 @@ export const search = {
     )
     .addStringOption((option) =>
       option
-        .setName("match_type")
+        .setName("バトル形式")
         .setDescription("バトル形式")
         .setRequired(false)
         .addChoices(
@@ -45,15 +45,9 @@ export const search = {
         )
     ),
   async execute(interaction: ChatInputCommandInteraction) {
-    const stage = interaction.options.getString("stage")
-      ? interaction.options.getString("stage")
-      : null;
-    const rule = interaction.options.getString("rule")
-      ? interaction.options.getString("rule")
-      : null;
-    const matchType = interaction.options.getString("match_type")
-      ? interaction.options.getString("match_type")
-      : null;
+    const stage = interaction.options.getString("ステージ") ?? null;
+    const rule = interaction.options.getString("ルール") ?? null;
+    const matchType = interaction.options.getString("バトル形式") ?? null;
 
     const results = await Schedules.search(stage, rule, matchType);
     if (!results) {
@@ -69,7 +63,9 @@ export const search = {
     const embed = new EmbedBuilder()
       .setColor("#0099ff")
       .setTitle("検索結果")
-      .setDescription(`検索キーワード: ${stage ?? ""}, ${rule ?? ""}, ${matchType ?? ""}`)
+      .setDescription(
+        `検索キーワード: ${stage ?? ""}, ${rule ?? ""}, ${matchType ?? ""}`
+      )
       .setTimestamp();
 
     results.forEach((result) => {
@@ -77,11 +73,14 @@ export const search = {
         { name: "開始時間", value: result.schedules.startTime, inline: true },
         { name: "終了時間", value: result.schedules.endTime, inline: true },
         { name: "ルール", value: result.rules.name ?? "不明", inline: true },
-        { name: "バトル形式", value: result.match_types.name ?? "不明", inline: true },
+        {
+          name: "バトル形式",
+          value: result.match_types.name ?? "不明",
+          inline: true,
+        },
       ]);
     });
 
     await interaction.reply({ embeds: [embed] });
   },
-  
 };
