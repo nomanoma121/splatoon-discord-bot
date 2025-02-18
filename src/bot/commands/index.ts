@@ -1,10 +1,10 @@
 import { Client } from "discord.js";
 import { ping } from "./ping";
-import { hello } from "./hello";
-import { talk } from "./talk";
 import { embed } from "./embed";
+import { choice } from "./choice";
+import { search } from "./search";
 
-const commands = [embed, hello, ping, talk];
+const commands = [embed, ping, choice, search];
 
 export const registerCommands = (client: Client) => {
   client.on("interactionCreate", async (interaction) => {
