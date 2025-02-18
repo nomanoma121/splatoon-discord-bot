@@ -1,11 +1,11 @@
 import { REST, Routes, SlashCommandBuilder } from "discord.js";
 import dotenv from "dotenv";
 
-import { ping } from "./commands/ping";
-import { hello } from "./commands/hello";
-import { talk } from "./commands/talk";
-import { embed } from "./commands/embed";
-import { fetchApi } from "./commands/fetch-api";
+import { ping } from "./bot/commands/ping";
+import { hello } from "./bot/commands/hello";
+import { talk } from "./bot/commands/talk";
+import { embed } from "./bot/commands/embed";
+import { fetchApi } from "./bot/commands/fetch-api";
 
 dotenv.config();
 

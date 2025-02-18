@@ -3,7 +3,6 @@ import { ping } from "./ping";
 import { hello } from "./hello";
 import { talk } from "./talk";
 import { embed } from "./embed";
-// import { fetchApi } from "./fetch-api";
 
 const commands = [embed, hello, ping, talk];
 

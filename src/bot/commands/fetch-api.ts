@@ -1,5 +1,4 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder, EmbedBuilder } from "discord.js";
-import { fetchData } from "../utils/api";
 
 export const fetchApi = {
   name: "fetch-api",
