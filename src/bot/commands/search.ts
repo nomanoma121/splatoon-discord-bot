@@ -50,13 +50,28 @@ export const search = {
     const matchType = interaction.options.getString("バトル形式") ?? null;
 
     const results = await Schedules.search(stage, rule, matchType);
+
+    const errEmbed = (text: string) => {
+      return new EmbedBuilder()
+      .setColor("#ff0000")
+      .setTitle("エラー")
+      .setDescription(text)
+      .setImage("https://img.atwiki.jp/dmps_fun/pub/ICON/20012001/SPECIAL01.png")
+      .setTimestamp();
+    }
+
     if (!results) {
-      await interaction.reply("検索結果が見つかりませんでした");
+      await interaction.reply({ embeds: [errEmbed("データベースにエラーが発生しました")] });
       return;
     }
 
     if (results.length === 0) {
-      await interaction.reply("検索結果が見つかりませんでした");
+      await interaction.reply({ embeds: [errEmbed("検索結果が見つかりませんでした")] });
+      return;
+    }
+
+    if (results.length > 25) {
+      await interaction.reply({ embeds: [errEmbed("検索結果が多すぎます")] });
       return;
     }
 
