@@ -56,13 +56,27 @@ const errEmbed = (text: string) => {
     .setColor("#ff0000")
     .setTitle("エラー")
     .setDescription(text)
-    .setImage("https://img.atwiki.jp/dmps_fun/pub/ICON/20012001/SPECIAL01.png")
+    .setImage("https://img.atwiki.jp/dmps_fun/pub/ICON/20012001/SPECIAL01.png");
 };
 
-const formatDate = (date: string) => {
+const getTime = (date: string) => {
   const d = new Date(date);
-  return `${d.getMonth() + 1}/${d.getDate()} ${d.getHours()}:${d.getMinutes().toString().padStart(2, "0")}`;
-}
+  return ` ${d.getHours().toString().padStart(2, "0")}:${d
+    .getMinutes()
+    .toString()
+    .padStart(2, "0")}`;
+};
+
+const getDate = (date: string) => {
+  const d = new Date(date);
+  return `${d.getMonth() + 1}/${d.getDate()}`;
+};
+
+const isDateChanged = (pre: string, now: string) => {
+  const preDate = new Date(pre);
+  const nowDate = new Date(now);
+  return preDate.getDate() !== nowDate.getDate();
+};
 
 const keyToName = (key: string) => {
   switch (key) {
@@ -140,17 +154,27 @@ export const search = {
       .setTitle("検索結果をおしらせします")
       .setDescription(
         `検索キーワード: ${stage ?? ""}, ${rule ?? ""}, ${matchType ?? ""}`
-      )
+      );
 
     Object.entries(formatedResults).forEach(([key, value]) => {
       embed.addFields([
         {
-          name: `**${keyToName(key)}**`,
+          name: `「**${keyToName(key)}**」`,
           value: value
-            .map(
-              (v: any) =>
-                `◦${formatDate(v.startTime)} ~ \n${v.rule} ${v.stage1}, ${v.stage2}`
-            )
+            .map((v, index) => {
+              if (
+                !index ||
+                isDateChanged(value[index - 1].startTime, v.startTime)
+              ) {
+                return `**${getDate(v.startTime)}**\n◦${getTime(
+                  v.startTime
+                )} ~ ${v.rule} 【${v.stage1}, ${v.stage2}】`;
+              } else {
+                return `◦${getTime(v.startTime)} ~ ${v.rule} 【${v.stage1}, ${
+                  v.stage2
+                }】`;
+              }
+            })
             .join("\n"),
         },
       ]);
