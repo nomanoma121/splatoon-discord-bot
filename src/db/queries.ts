@@ -1,7 +1,7 @@
 import { db } from "./index";
 import { schedules, stages, rules, matchTypes } from "./schema";
 import { SQLiteTable } from "drizzle-orm/sqlite-core";
-import { eq, and, or, aliasedTable } from "drizzle-orm";
+import { eq, and, or, aliasedTable, desc, asc } from "drizzle-orm";
 import { TSchedule } from "../utils/types";
 
 const getAll = async (table: SQLiteTable) => {
@@ -40,11 +40,31 @@ const search = async (
     );
 };
 
+const getTimeRange = async () => {
+  const min = await db
+    .select()
+    .from(schedules)
+    .orderBy(
+      asc(schedules.startTime)
+    )
+  const max = await db
+    .select()
+    .from(schedules)
+    .orderBy(
+      desc(schedules.startTime)
+    )
+  return {
+    min: min[0].startTime,
+    max: max[0].startTime
+  }
+}
+
 export const Schedules = {
   getAll: () => getAll(schedules),
   create: (data: TSchedule) => create(schedules, data),
   search: (stage: string | null, rule: string | null, matchType: string | null) =>
     search(stage, rule, matchType),
+  getTimeRange: () => getTimeRange(),
   deleteAll: () => deleteAll(schedules),
 };
 
