@@ -108,7 +108,7 @@ const errEmbed = (text: string) => {
     .setColor("#ff0000")
     .setTitle("エラー")
     .setDescription(text)
-    .setImage("https://img.atwiki.jp/dmps_fun/pub/ICON/20012003/JOY.png");
+    .setImage("https://img.atwiki.jp/dmps_fun/pub/ICON/20012003/PAIN.png");
 };
 
 const embed = (
@@ -216,15 +216,16 @@ export const search = {
     }
 
     const embeds: EmbedBuilder[] = [];
+    const searchRange = Schedules.getTimeRange();
     // 見出し
     embeds.push(
       new EmbedBuilder()
         .setColor("#00ff00")
         .setTitle("🔍スケジュール検索")
         .setDescription(
-          `**•ステージ: ${stage ?? "全て"}\n •ルール: ${
+        `**${getDate((await searchRange).min)} ${getTime((await searchRange).min)} ~ ${getDate((await searchRange).max)} ${getTime((await searchRange).max)}\n\n•ステージ: ${stage ?? "全て"}\n•ルール: ${
             rule ?? "全て"
-          }\n  •バトル形式: ${matchType ?? "全て"}**`
+          }\n•バトル形式: ${matchType ?? "全て"}**`
         )
     );
 
