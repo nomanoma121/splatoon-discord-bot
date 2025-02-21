@@ -61,8 +61,26 @@ const getTime = (date: string) => {
 
 const getDate = (date: string) => {
   const d = new Date(date);
-  return `${d.getMonth() + 1}/${d.getDate()}`;
+  // 曜日も返す
+  const days = ["日", "月", "火", "水", "木", "金", "土"];
+
+  return `${d.getMonth() + 1}/${d.getDate()} (${days[d.getDay()]})`;
 };
+
+const addEmojiToRule = (text: string) => {
+  switch (text) {
+    case "ナワバリ":
+      return "🎨ナワバリ";
+    case "エリア":
+      return "🏳️エリア";
+    case "ホコ":
+      return "🏆ホコ";
+    case "ヤグラ":
+      return "🚋ヤグラ"
+    case "アサリ":
+      return "🏈アサリ";
+  }
+}
 
 const isDateChanged = (pre: string, now: string) => {
   const preDate = new Date(pre);
@@ -106,7 +124,7 @@ const embed = (
     const stage = `${
       match.stage1 === searchStage ? `"${match.stage1}"` : match.stage1
     } / ${match.stage2 === searchStage ? `"${match.stage2}"` : match.stage2}`;
-    const value = `•${time} ~ ${match.rule} ${stage}`;
+    const value = `•${time} ~ ${addEmojiToRule(match.rule)} ${stage}`;
     if (index && isDateChanged(matches[index - 1].startTime, match.startTime)) {
       fields.push({
         name: `**${getDate(matches[index - 1].startTime)}**`,
@@ -209,7 +227,7 @@ export const search = {
           }\n  •バトル形式: ${matchType ?? "全て"}**`
         )
     );
-    
+
     Object.entries(formatedResults).forEach(([key, value]) => {
       if (value.length === 0) {
         return;
