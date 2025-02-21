@@ -23,6 +23,7 @@ const search = async (
 ) => {
   const stage1 = aliasedTable(stages, "stage1");
   const stage2 = aliasedTable(stages, "stage2");
+  // TODO: 必要な分だけ取得するように修正
   return await db
     .select()
     .from(schedules)
