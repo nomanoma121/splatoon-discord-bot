@@ -90,23 +90,27 @@ const errEmbed = (text: string) => {
     .setColor("#ff0000")
     .setTitle("エラー")
     .setDescription(text)
-    .setImage("https://img.atwiki.jp/dmps_fun/pub/ICON/20012001/SPECIAL01.png");
+    .setImage("https://img.atwiki.jp/dmps_fun/pub/ICON/20012003/JOY.png");
 };
 
-const embed = (matches: Match[], matchType: string, searchStage: string | null) => {
+const embed = (
+  matches: Match[],
+  matchType: string,
+  searchStage: string | null
+) => {
   const fields: any = [];
   const tmp: { value: string }[] = [];
   matches.forEach((match, index) => {
     const time = getTime(match.startTime);
     // ステージ名をハイライト
     const stage = `${
-      match.stage1 === searchStage ? `**"${match.stage1}"**` : match.stage1
-    } / ${match.stage2 === searchStage ? `**"${match.stage2}"**` : match.stage2}`;
-    const value = `•**${time} ~** [${match.rule}] ${stage}`;
+      match.stage1 === searchStage ? `"${match.stage1}"` : match.stage1
+    } / ${match.stage2 === searchStage ? `"${match.stage2}"` : match.stage2}`;
+    const value = `•${time} ~ ${match.rule} ${stage}`;
     if (index && isDateChanged(matches[index - 1].startTime, match.startTime)) {
       fields.push({
         name: `**${getDate(matches[index - 1].startTime)}**`,
-        value: `${tmp.map((t: any) => t.value).join("\n")}`,
+        value: `**${tmp.map((t: any) => t.value).join("\n")}**`,
         inline: false,
       });
       tmp.length = 0;
@@ -118,7 +122,7 @@ const embed = (matches: Match[], matchType: string, searchStage: string | null) 
     if (index === matches.length - 1) {
       fields.push({
         name: `**${getDate(match.startTime)}**`,
-        value: `${tmp.map((t: any) => t.value).join("\n")}`,
+        value: `**${tmp.map((t: any) => t.value).join("\n")}**`,
         inline: false,
       });
     }
@@ -186,8 +190,31 @@ export const search = {
       }
     });
 
-    const embeds = Object.entries(formatedResults).map(([key, value]) => {
-      return embed(value, keyToName(key), stage);
+    if (results.length === 0) {
+      await interaction.reply({
+        embeds: [errEmbed("お探しの条件はみつかりませんでした")],
+      });
+      return;
+    }
+
+    const embeds: EmbedBuilder[] = [];
+    // 見出し
+    embeds.push(
+      new EmbedBuilder()
+        .setColor("#00ff00")
+        .setTitle("🔍スケジュール検索🔍")
+        .setDescription(
+          `**•ステージ: ${stage ?? "全て"}\n •ルール: ${
+            rule ?? "全て"
+          }\n  •バトル形式: ${matchType ?? "全て"}**`
+        )
+    );
+    
+    Object.entries(formatedResults).forEach(([key, value]) => {
+      if (value.length === 0) {
+        return;
+      }
+      embeds.push(embed(value, keyToName(key), stage));
     });
 
     await interaction.reply({
