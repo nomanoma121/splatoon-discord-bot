@@ -9,11 +9,11 @@ export const seeds = {
     { key: "fest_challenge", name: "フェスマッチ(チャレンジ)" },
   ],
   rules: [
-    { key: "TURF_WAR", name: "ナワバリバトル" },
-    { key: "AREA", name: "ガチエリア" },
-    { key: "LOFT", name: "ガチヤグラ" },
-    { key: "GOAL", name: "ガチホコバトル" },
-    { key: "CLAM", name: "ガチアサリ" },
+    { key: "TURF_WAR", name: "ナワバリ" },
+    { key: "AREA", name: "エリア" },
+    { key: "LOFT", name: "ヤグラ" },
+    { key: "GOAL", name: "ホコ" },
+    { key: "CLAM", name: "アサリ" },
   ],
   stages: [
     {
