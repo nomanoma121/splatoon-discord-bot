@@ -51,14 +51,6 @@ const formatResults = (results: any) => {
   return formatedResults;
 };
 
-const errEmbed = (text: string) => {
-  return new EmbedBuilder()
-    .setColor("#ff0000")
-    .setTitle("エラー")
-    .setDescription(text)
-    .setImage("https://img.atwiki.jp/dmps_fun/pub/ICON/20012001/SPECIAL01.png");
-};
-
 const getTime = (date: string) => {
   const d = new Date(date);
   return ` ${d.getHours().toString().padStart(2, "0")}:${d
@@ -81,16 +73,61 @@ const isDateChanged = (pre: string, now: string) => {
 const keyToName = (key: string) => {
   switch (key) {
     case "regular":
-      return "レギュラーマッチ";
+      return "🎨レギュラーマッチ🎨";
     case "bankaraOpen":
-      return "バンカラオープン";
+      return "🔥バンカラオープン🔥";
     case "bankaraChallenge":
-      return "バンカラチャレンジ";
+      return "🔥バンカラチャレンジ🔥";
     case "x":
-      return "Xマッチ";
+      return "🏅Xマッチ🏅";
     default:
       return key;
   }
+};
+
+const errEmbed = (text: string) => {
+  return new EmbedBuilder()
+    .setColor("#ff0000")
+    .setTitle("エラー")
+    .setDescription(text)
+    .setImage("https://img.atwiki.jp/dmps_fun/pub/ICON/20012001/SPECIAL01.png");
+};
+
+const embed = (matches: Match[], matchType: string, searchStage: string | null) => {
+  const fields: any = [];
+  const tmp: { value: string }[] = [];
+  matches.forEach((match, index) => {
+    const time = getTime(match.startTime);
+    // ステージ名をハイライト
+    const stage = `${
+      match.stage1 === searchStage ? `**"${match.stage1}"**` : match.stage1
+    } / ${match.stage2 === searchStage ? `**"${match.stage2}"**` : match.stage2}`;
+    const value = `•**${time} ~** [${match.rule}] ${stage}`;
+    if (index && isDateChanged(matches[index - 1].startTime, match.startTime)) {
+      fields.push({
+        name: `**${getDate(matches[index - 1].startTime)}**`,
+        value: `${tmp.map((t: any) => t.value).join("\n")}`,
+        inline: false,
+      });
+      tmp.length = 0;
+    }
+    tmp.push({
+      value: value,
+    });
+    // 最後の要素の場合はフィールドに追加
+    if (index === matches.length - 1) {
+      fields.push({
+        name: `**${getDate(match.startTime)}**`,
+        value: `${tmp.map((t: any) => t.value).join("\n")}`,
+        inline: false,
+      });
+    }
+  });
+
+  return new EmbedBuilder()
+    .setColor("#0099ff")
+    .setTitle(matchType)
+    .setFields(fields);
 };
 
 export const search = {
@@ -149,37 +186,12 @@ export const search = {
       }
     });
 
-    const embed = new EmbedBuilder()
-      .setColor("#0099ff")
-      .setTitle("検索結果をおしらせします")
-      .setDescription(
-        `検索キーワード: ${stage ?? ""}, ${rule ?? ""}, ${matchType ?? ""}`
-      );
-
-    Object.entries(formatedResults).forEach(([key, value]) => {
-      embed.addFields([
-        {
-          name: `「**${keyToName(key)}**」`,
-          value: value
-            .map((v, index) => {
-              if (
-                !index ||
-                isDateChanged(value[index - 1].startTime, v.startTime)
-              ) {
-                return `**${getDate(v.startTime)}**\n◦${getTime(
-                  v.startTime
-                )} ~ ${v.rule} 【${v.stage1}, ${v.stage2}】`;
-              } else {
-                return `◦${getTime(v.startTime)} ~ ${v.rule} 【${v.stage1}, ${
-                  v.stage2
-                }】`;
-              }
-            })
-            .join("\n"),
-        },
-      ]);
+    const embeds = Object.entries(formatedResults).map(([key, value]) => {
+      return embed(value, keyToName(key), stage);
     });
 
-    await interaction.reply({ embeds: [embed] });
+    await interaction.reply({
+      embeds: embeds,
+    });
   },
 };
