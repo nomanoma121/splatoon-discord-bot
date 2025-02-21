@@ -91,13 +91,13 @@ const isDateChanged = (pre: string, now: string) => {
 const keyToName = (key: string) => {
   switch (key) {
     case "regular":
-      return "🎨レギュラーマッチ🎨";
+      return "🎨レギュラーマッチ";
     case "bankaraOpen":
-      return "🔥バンカラオープン🔥";
+      return "🔥バンカラオープン";
     case "bankaraChallenge":
-      return "🔥バンカラチャレンジ🔥";
+      return "🔥バンカラチャレンジ";
     case "x":
-      return "🏅Xマッチ🏅";
+      return "🏅Xマッチ";
     default:
       return key;
   }
@@ -220,7 +220,7 @@ export const search = {
     embeds.push(
       new EmbedBuilder()
         .setColor("#00ff00")
-        .setTitle("🔍スケジュール検索🔍")
+        .setTitle("🔍スケジュール検索")
         .setDescription(
           `**•ステージ: ${stage ?? "全て"}\n •ルール: ${
             rule ?? "全て"
