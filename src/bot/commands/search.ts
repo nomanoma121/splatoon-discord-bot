@@ -76,11 +76,11 @@ const addEmojiToRule = (text: string) => {
     case "ホコ":
       return "🏆ホコ";
     case "ヤグラ":
-      return "🚋ヤグラ"
+      return "🚋ヤグラ";
     case "アサリ":
       return "🏈アサリ";
   }
-}
+};
 
 const isDateChanged = (pre: string, now: string) => {
   const preDate = new Date(pre);
@@ -208,13 +208,6 @@ export const search = {
       }
     });
 
-    if (results.length === 0) {
-      await interaction.reply({
-        embeds: [errEmbed("お探しの条件はみつかりませんでした")],
-      });
-      return;
-    }
-
     const embeds: EmbedBuilder[] = [];
     const searchRange = Schedules.getTimeRange();
     // 見出し
@@ -223,11 +216,23 @@ export const search = {
         .setColor("#00ff00")
         .setTitle("🔍スケジュール検索")
         .setDescription(
-        `**${getDate((await searchRange).min)} ${getTime((await searchRange).min)} ~ ${getDate((await searchRange).max)} ${getTime((await searchRange).max)}\n\n•ステージ: ${stage ?? "全て"}\n•ルール: ${
+          `**${getDate((await searchRange).min)} ${getTime(
+            (await searchRange).min
+          )} ~ ${getDate((await searchRange).max)} ${getTime(
+            (await searchRange).max
+          )}\n\n•ステージ: ${stage ?? "全て"}\n•ルール: ${
             rule ?? "全て"
           }\n•バトル形式: ${matchType ?? "全て"}**`
         )
     );
+
+    if (results.length === 0) {
+      embeds.push(errEmbed("該当するスケジュールが見つかりませんでした"));
+      await interaction.reply({
+        embeds: embeds,
+      });
+      return;
+    }
 
     Object.entries(formatedResults).forEach(([key, value]) => {
       if (value.length === 0) {
