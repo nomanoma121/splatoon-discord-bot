@@ -1,9 +1,9 @@
 import { db } from "./index";
 import { schedules, stages, rules, matchTypes } from "./schema";
 import { SQLiteTable } from "drizzle-orm/sqlite-core";
-import { eq, and, or, gt, aliasedTable, desc, asc, max } from "drizzle-orm";
+import { eq, and, or, not, aliasedTable, desc, asc, max } from "drizzle-orm";
 import { TSchedule } from "../utils/types";
-import { convertToISOJST } from "../utils/date";
+import { convertToISOJST, ceilDate, floorDate } from "../utils/date";
 
 const getAll = async (table: SQLiteTable) => {
   return await db.select().from(table);
@@ -14,12 +14,11 @@ const create = async (table: SQLiteTable, values: any) => {
 };
 
 const clean = async () => {
-  const maxStartTime = await db
-    .select({ value: max(schedules.startTime) })
-    .from(schedules) as { value: string }[];
+  const now = new Date();
+  const begin = floorDate(now.toString());
   return await db
     .delete(schedules)
-    .where(gt(schedules.startTime, maxStartTime[0].value));
+    .where(not(eq(schedules.startTime, convertToISOJST(begin))));
 };
 
 const search = async (
@@ -63,17 +62,7 @@ const getTimeRange = async () => {
 
 const currentSchedules = async () => {
   const now = new Date();
-  // 現在の時間が奇数ならそのまま、偶数なら1引く
-  const beginHour =
-    now.getHours() % 2 === 0 ? now.getHours() - 1 : now.getHours();
-  const begin = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate(),
-    beginHour,
-    0,
-    0
-  ).toString();
+  const begin = floorDate(now.toString());
   const stage1 = aliasedTable(stages, "stage1");
   const stage2 = aliasedTable(stages, "stage2");
   return await db
@@ -88,16 +77,7 @@ const currentSchedules = async () => {
 
 const nextSchedules = async () => {
   const now = new Date();
-  const beginHour =
-    now.getHours() % 2 === 0 ? now.getHours() + 1 : now.getHours() + 2;
-  const begin = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate(),
-    beginHour,
-    0,
-    0
-  ).toString();
+  const begin = ceilDate(now.toString());
   const stage1 = aliasedTable(stages, "stage1");
   const stage2 = aliasedTable(stages, "stage2");
 
@@ -110,7 +90,7 @@ const nextSchedules = async () => {
     .innerJoin(matchTypes, eq(matchTypes.key, schedules.matchTypeKey))
     .where(eq(schedules.startTime, convertToISOJST(begin)));
 };
-  
+
 export const Schedules = {
   getAll: () => getAll(schedules),
   create: (data: TSchedule) => create(schedules, data),
