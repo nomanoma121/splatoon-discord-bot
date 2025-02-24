@@ -6,6 +6,7 @@ import {
 import { format, keyToName } from "../../utils/format";
 import { Schedules } from "../../db/queries";
 import { embed, errEmbed } from "../../utils/embeds";
+import { getDate, getTime, ceilDate } from "../../utils/date";
 
 export const schedulesNext = {
   name: "schedules-next",
@@ -26,6 +27,14 @@ export const schedulesNext = {
     });
 
     const embeds: EmbedBuilder[] = [];
+    const now = new Date();
+    const begin = ceilDate(now.toString());
+    embeds.push(
+      new EmbedBuilder()
+        .setColor("#00ff00")
+        .setTitle("次のスケジュール")
+        .setDescription(`**${getDate(begin)} ${getTime(begin)} ~**`)
+    );
 
     if (results.length === 0) {
         embeds.push(errEmbed("該当するスケジュールはありません"));

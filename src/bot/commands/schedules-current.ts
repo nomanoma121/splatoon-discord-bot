@@ -6,6 +6,7 @@ import {
 import { format, keyToName } from "../../utils/format";
 import { Schedules } from "../../db/queries";
 import { embed, errEmbed } from "../../utils/embeds";
+import { getDate, getTime, floorDate } from "../../utils/date";
 
 export const schedulesCurrent = {
   name: "schedules-current",
@@ -26,14 +27,22 @@ export const schedulesCurrent = {
     });
 
     const embeds: EmbedBuilder[] = [];
+    const now = new Date();
+    const begin = floorDate(now.toString());
+    embeds.push(
+      new EmbedBuilder()
+        .setColor("#00ff00")
+        .setTitle("現在のスケジュール")
+        .setDescription(`**${getDate(begin)} ${getTime(begin)} ~**`)
+    );
 
     if (results.length === 0) {
-        embeds.push(errEmbed("該当するスケジュールはありません"));
-        await interaction.reply({
-            embeds: embeds,
-        });
-        return;
-    } 
+      embeds.push(errEmbed("該当するスケジュールはありません"));
+      await interaction.reply({
+        embeds: embeds,
+      });
+      return;
+    }
 
     Object.entries(formatedResults).forEach(([key, value]) => {
       if (value.length === 0) {
@@ -45,5 +54,5 @@ export const schedulesCurrent = {
     await interaction.reply({
       embeds: embeds,
     });
-  }
+  },
 };
