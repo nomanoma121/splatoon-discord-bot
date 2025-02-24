@@ -3,6 +3,7 @@ import { schedules, stages, rules, matchTypes } from "./schema";
 import { SQLiteTable } from "drizzle-orm/sqlite-core";
 import { eq, and, or, gt, aliasedTable, desc, asc, max } from "drizzle-orm";
 import { TSchedule } from "../utils/types";
+import { convertToISOJST } from "../utils/date";
 
 const getAll = async (table: SQLiteTable) => {
   return await db.select().from(table);
@@ -73,10 +74,16 @@ const currentSchedules = async () => {
     0,
     0
   ).toString();
+  const stage1 = aliasedTable(stages, "stage1");
+  const stage2 = aliasedTable(stages, "stage2");
   return await db
     .select()
     .from(schedules)
-    .where(eq(schedules.startTime, begin));
+    .leftJoin(stage1, eq(stage1.id, schedules.stage1ID))
+    .leftJoin(stage2, eq(stage2.id, schedules.stage2ID))
+    .innerJoin(rules, eq(rules.key, schedules.ruleKey))
+    .innerJoin(matchTypes, eq(matchTypes.key, schedules.matchTypeKey))
+    .where(eq(schedules.startTime, convertToISOJST(begin)));
 };
 
 const nextSchedules = async () => {
@@ -91,10 +98,17 @@ const nextSchedules = async () => {
     0,
     0
   ).toString();
+  const stage1 = aliasedTable(stages, "stage1");
+  const stage2 = aliasedTable(stages, "stage2");
+
   return await db
     .select()
     .from(schedules)
-    .where(eq(schedules.startTime, begin));
+    .leftJoin(stage1, eq(stage1.id, schedules.stage1ID))
+    .leftJoin(stage2, eq(stage2.id, schedules.stage2ID))
+    .innerJoin(rules, eq(rules.key, schedules.ruleKey))
+    .innerJoin(matchTypes, eq(matchTypes.key, schedules.matchTypeKey))
+    .where(eq(schedules.startTime, convertToISOJST(begin)));
 };
   
 export const Schedules = {
