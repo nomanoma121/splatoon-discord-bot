@@ -2,13 +2,14 @@ import { REST, Routes, SlashCommandBuilder } from "discord.js";
 import dotenv from "dotenv";
 
 import { ping } from "./bot/commands/ping";
-import { embed } from "./bot/commands/embed";
 import { choice } from "./bot/commands/choice";
 import { search } from "./bot/commands/search";
+import { schedulesCurrent } from "./bot/commands/schedules-current";
+import { schedulesNext } from "./bot/commands/schedules-next";
 
 dotenv.config();
 
-const commands = [embed, ping, choice, search].map((command) => command.data.toJSON());
+const commands = [schedulesCurrent, schedulesNext, ping, choice, search].map((command) => command.data.toJSON());
 
 const rest = new REST({ version: "10" }).setToken(process.env.TOKEN as string);
 
