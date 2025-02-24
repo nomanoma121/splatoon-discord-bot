@@ -12,11 +12,6 @@ export const initializeDB = async () => {
 
   await Schedules.deleteAll()
     .then(() => {
-      Schedules.getAll().then((schedules) => {
-        console.log(schedules);
-      });
-    })
-    .then(() => {
       console.log("Schedules successfully deleted");
     });
 
