@@ -3,7 +3,7 @@ import {
   SlashCommandBuilder,
   EmbedBuilder,
 } from "discord.js";
-import { format, addEmojiToRule, keyToName } from "../../utils/format";
+import { format, keyToName } from "../../utils/format";
 import { Schedules } from "../../db/queries";
 import { embed, errEmbed } from "../../utils/embeds";
 

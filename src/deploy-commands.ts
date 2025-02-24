@@ -1,4 +1,4 @@
-import { REST, Routes, SlashCommandBuilder } from "discord.js";
+import { REST, Routes } from "discord.js";
 import dotenv from "dotenv";
 
 import { ping } from "./bot/commands/ping";

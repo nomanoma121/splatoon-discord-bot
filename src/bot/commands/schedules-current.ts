@@ -1,20 +1,20 @@
 import {
-  EmbedBuilder,
   ChatInputCommandInteraction,
   SlashCommandBuilder,
+  EmbedBuilder,
 } from "discord.js";
-import { format } from "../../utils/format";
+import { format, keyToName } from "../../utils/format";
 import { Schedules } from "../../db/queries";
-import { errEmbed } from "../../utils/embeds";
+import { embed, errEmbed } from "../../utils/embeds";
 
 export const schedulesCurrent = {
   name: "schedules-current",
   data: new SlashCommandBuilder()
     .setName("schedules-current")
-    .setDescription("現在のスケジュールを表示します"),
+    .setDescription("次のスケジュールを表示します"),
   async execute(interaction: ChatInputCommandInteraction) {
-    const resutl = await Schedules.current();
-    const formatedResults = format(resutl);
+    const results = await Schedules.current();
+    const formatedResults = format(results);
 
     Object.values(formatedResults).forEach(async (result) => {
       if (!result) {
@@ -25,28 +25,25 @@ export const schedulesCurrent = {
       }
     });
 
-    console.log(formatedResults);
+    const embeds: EmbedBuilder[] = [];
 
-    const embed = new EmbedBuilder()
-      .setColor("#0099ff")
-      .setTitle("現在のスケジュール")
-      .setFields([
-        {
-          name: "レギュラーマッチ",
-          value: "ホコバトル  モズク農園 / デボン海洋博物館",
-          inline: false,
-        },
-        {
-          name: "ガチマッチ",
-          value: "ガチアサリ  マンタマリア号 / ホッケ埠頭",
-          inline: false,
-        },
-        {
-          name: "リーグマッチ",
-          value: "ナワバリバトル ハコフグ倉庫 / モズク農園",
-          inline: false,
-        }
-      ]);
-    await interaction.reply({ embeds: [embed] });
-  },
+    if (results.length === 0) {
+        embeds.push(errEmbed("該当するスケジュールはありません"));
+        await interaction.reply({
+            embeds: embeds,
+        });
+        return;
+    } 
+
+    Object.entries(formatedResults).forEach(([key, value]) => {
+      if (value.length === 0) {
+        return;
+      }
+      embeds.push(embed(value, keyToName(key), ""));
+    });
+
+    await interaction.reply({
+      embeds: embeds,
+    });
+  }
 };
