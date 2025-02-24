@@ -25,7 +25,7 @@ registerEvents(client);
 
 const updateSchedules = async () => {
   try {
-    Schedules.deleteAll();
+    Schedules.clean();
     const data = await fetchData();
     if (!data) {
       throw new Error("Failed to fetch data");
@@ -33,7 +33,7 @@ const updateSchedules = async () => {
     const schedules = extractData(data);
     const filteredSchedules = filterData(schedules);
     insertData(filteredSchedules);
-    console.log("Data inserted successfully");
+    console.log("Schedules successfully updated");
   } catch (err) {
     console.error(err);
   }
