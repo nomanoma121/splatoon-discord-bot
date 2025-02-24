@@ -22,7 +22,7 @@ export const embed = (
     const stage = `${
       match.stage1 === searchStage ? `"${match.stage1}"` : match.stage1
     } / ${match.stage2 === searchStage ? `"${match.stage2}"` : match.stage2}`;
-    const value = `•${time} ~ ${addEmojiToRule(match.rule)} ${stage}`;
+    const value = `•${time} ~ ${addEmojiToRule(`${match.rule}`)} ${stage}`;
     if (index && isDateChanged(matches[index - 1].startTime, match.startTime)) {
       fields.push({
         name: `**${getDate(matches[index - 1].startTime)}**`,
