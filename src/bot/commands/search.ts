@@ -5,24 +5,9 @@ import {
 } from "discord.js";
 import { seeds } from "../../db/seed-data";
 import { Schedules } from "../../db/queries";
-import { format } from "../../utils/format";
+import { format, keyToName } from "../../utils/format";
 import { getDate, getTime } from "../../utils/date";
 import { errEmbed, embed } from "../../utils/embeds";
-
-const keyToName = (key: string) => {
-  switch (key) {
-    case "regular":
-      return "🎨レギュラーマッチ";
-    case "bankaraOpen":
-      return "🔥バンカラオープン";
-    case "bankaraChallenge":
-      return "🔥バンカラチャレンジ";
-    case "x":
-      return "🏅Xマッチ";
-    default:
-      return key;
-  }
-};
 
 export const search = {
   name: "search",

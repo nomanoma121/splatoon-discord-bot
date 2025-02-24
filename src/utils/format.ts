@@ -13,7 +13,7 @@ type FormatedResults = {
 };
 
 // TODO: 型をちゃんと定義する
-export const format = (results: any) => {
+export const format = (results: any): FormatedResults => {
   const formatedResults: FormatedResults = {
     regular: [],
     bankaraOpen: [],
@@ -46,14 +46,29 @@ export const format = (results: any) => {
 export const addEmojiToRule = (text: string) => {
   switch (text) {
     case "ナワバリ":
-      return "🎨ナワバリ";
+      return "🎨「ナワバリ」";
     case "エリア":
-      return "🏳️エリア";
+      return "🏳️「エリア」";
     case "ホコ":
-      return "🏆ホコ";
+      return "🏆「ホコ」";
     case "ヤグラ":
-      return "🚋ヤグラ";
+      return "🚋「ヤグラ」";
     case "アサリ":
-      return "🏈アサリ";
+      return "🏈「アサリ」";
+  }
+};
+
+export const keyToName = (key: string) => {
+  switch (key) {
+    case "regular":
+      return "🎨レギュラーマッチ";
+    case "bankaraOpen":
+      return "🔥バンカラオープン";
+    case "bankaraChallenge":
+      return "🔥バンカラチャレンジ";
+    case "x":
+      return "🏅Xマッチ";
+    default:
+      return key;
   }
 };
