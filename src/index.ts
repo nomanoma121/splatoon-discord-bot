@@ -26,7 +26,7 @@ registerEvents(client);
 
 const updateSchedules = async () => {
   try {
-    Schedules.deleteAll();
+    await Schedules.deleteAll();
     const data = await fetchData();
     if (!data) {
       throw new Error("Failed to fetch data");

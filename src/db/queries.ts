@@ -21,6 +21,10 @@ const clean = async () => {
     .where(not(eq(schedules.startTime, convertToISOJST(begin))));
 };
 
+const deleteAll = async (table: SQLiteTable) => {
+  return await db.delete(table);
+};
+
 const search = async (
   stage: string | null,
   rule: string | null,
@@ -103,7 +107,7 @@ export const Schedules = {
   next: () => nextSchedules(),
   getTimeRange: () => getTimeRange(),
   clean: () => clean(),
-  deleteAll: () => db.delete(schedules),
+  deleteAll: () => deleteAll(schedules),
 };
 
 export const Stages = {
