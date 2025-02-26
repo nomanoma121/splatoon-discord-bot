@@ -34,3 +34,10 @@ export type TSchedule = {
   stage1ID: number;
   stage2ID: number;
 }
+
+export type TSchedules = {
+  regular: TMatchData[];
+  bankara_open: TMatchData[];
+  bankara_challenge: TMatchData[];
+  x: TMatchData[];
+}

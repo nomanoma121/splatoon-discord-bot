@@ -5,9 +5,7 @@ import { registerEvents } from "./bot/events";
 import { Schedules } from "./db/queries";
 import { initializeDB } from "./db/init";
 import { fetchData } from "./utils/api";
-import { extractData } from "./utils/extractData";
-import { filterData } from "./utils/filterData";
-import { insertData } from "./utils/insertData";
+import { extractData, insertData, filterData } from "./utils/processData
 import { CronJob }from "cron";
 
 dotenv.config();
