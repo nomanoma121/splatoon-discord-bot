@@ -15,9 +15,9 @@ export const schedulesCurrent = {
     .setDescription("次のスケジュールを表示します"),
   async execute(interaction: ChatInputCommandInteraction) {
     const results = await Schedules.current();
-    const formatedResults = format(results);
+    const formattedResults = format(results);
 
-    Object.values(formatedResults).forEach(async (result) => {
+    Object.values(formattedResults).forEach(async (result) => {
       if (!result) {
         await interaction.reply({
           embeds: [errEmbed("データベースにエラーが発生しました")],
@@ -44,7 +44,7 @@ export const schedulesCurrent = {
       return;
     }
 
-    Object.entries(formatedResults).forEach(([key, value]) => {
+    Object.entries(formattedResults).forEach(([key, value]) => {
       if (value.length === 0) {
         return;
       }

@@ -5,7 +5,7 @@ type Match = {
   stage2: string;
 };
 
-type FormatedResults = {
+type FormattedResults = {
   regular: Match[];
   bankaraOpen: Match[];
   bankaraChallenge: Match[];
@@ -13,8 +13,8 @@ type FormatedResults = {
 };
 
 // TODO: 型をちゃんと定義する
-export const format = (results: any): FormatedResults => {
-  const formatedResults: FormatedResults = {
+export const format = (results: any): FormattedResults => {
+  const formattedResults: FormattedResults = {
     regular: [],
     bankaraOpen: [],
     bankaraChallenge: [],
@@ -30,17 +30,17 @@ export const format = (results: any): FormatedResults => {
     };
 
     if (result.match_types.key === "regular") {
-      formatedResults.regular.push(match);
+      formattedResults.regular.push(match);
     } else if (result.match_types.key === "bankara_open") {
-      formatedResults.bankaraOpen.push(match);
+      formattedResults.bankaraOpen.push(match);
     } else if (result.match_types.key === "bankara_challenge") {
-      formatedResults.bankaraChallenge.push(match);
+      formattedResults.bankaraChallenge.push(match);
     } else {
-      formatedResults.x.push(match);
+      formattedResults.x.push(match);
     }
   });
 
-  return formatedResults;
+  return formattedResults;
 };
 
 export const addEmojiToRule = (text: string) => {
